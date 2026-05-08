@@ -1,0 +1,33 @@
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --gold: #c89b3c;
+  --gold-light: #f0c060;
+  --bg: #0d1117;
+  --surface: #161b22;
+  --surface2: #1c2230;
+  --surface3: #232d3f;
+  --border: #2a3548;
+  --text: #e2e8f0;
+  --muted: #7a8fa6;
+  --baron: #8b5cf6;
+  --jungle: #22c55e;
+  --mid: #3b82f6;
+  --duo: #f97316;
+  --support: #ec4899;
+  --tier-s: #22c55e;
+  --tier-a: #3b82f6;
+  --tier-b: #f97316;
+  --tier-c: #ef4444;
+}
+
+body {
+  font-family: 'Segoe UI', sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  min-height: 100vh;
+}
+
+a { text-decoration: none; color: inherit; }
+button { font-family: inherit; cursor: pointer; }
+img { display: block; }
