@@ -51,7 +51,7 @@ export default function ChampionGrid({ navigate, roleFilter, search }) {
           {[
             { label: 'Champions', value: CHAMPIONS.length },
             { label: 'Builds', value: '200+' },
-            { label: 'Patch', value: '7.1d' },
+            { label: 'Patch', value: '7.1e' },
           ].map(s => (
             <div key={s.label} style={{ textAlign: 'center' }}>
               <div style={{ fontSize: '22px', fontWeight: 700, color: '#c89b3c' }}>{s.value}</div>

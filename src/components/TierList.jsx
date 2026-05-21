@@ -1,55 +1,229 @@
-import { CHAMPIONS, TIERS, ROLE_COLORS, ROLE_TIERS } from '../data/champions'
+import { CHAMPIONS, ROLE_TIERS } from '../data/champions'
 import React from 'react'
 
-const TIER_COLORS = {
-  GOD: '#ff6b35',
-  S: '#22c55e',
-  A: '#3b82f6',
-  B: '#f97316',
-  C: '#ef4444',
+// ─── Config ──────────────────────────────────────────────────────────────────
+
+const TIER_CONFIG = {
+  GOD: { color: '#ff6b35', bg: 'linear-gradient(135deg,#ff6b3520,#ffd70010)', glow: '0 0 28px #ff6b3518' },
+  S:   { color: '#22c55e', bg: 'rgba(34,197,94,0.05)',   glow: 'none' },
+  A:   { color: '#3b82f6', bg: 'rgba(59,130,246,0.05)',  glow: 'none' },
+  B:   { color: '#f97316', bg: 'rgba(249,115,22,0.05)',  glow: 'none' },
+  C:   { color: '#ef4444', bg: 'rgba(239,68,68,0.05)',   glow: 'none' },
 }
+
+const ROLE_META = {
+  Baron:   { color: '#8b5cf6', icon: '🗡️' },
+  Jungle:  { color: '#22c55e', icon: '🌿' },
+  Mid:     { color: '#3b82f6', icon: '✦'  },
+  Duo:     { color: '#f97316', icon: '🎯' },
+  Support: { color: '#ec4899', icon: '💛' },
+}
+
+const ROLES = ['All', 'Baron', 'Jungle', 'Mid', 'Duo', 'Support']
+
+// ─── Helpers ─────────────────────────────────────────────────────────────────
+
+/** Returns role-specific tier, falling back to champion's overall tier */
+const getRoleTier = (champ, role) =>
+  ROLE_TIERS[`${champ.id}-${role}`] || champ.tier
+
+/**
+ * Builds flat entries [{champ, role, tier}].
+ * In "All" mode every champ appears once per role they play.
+ */
+const buildEntries = (activeRole) => {
+  if (activeRole === 'All') {
+    const entries = []
+    CHAMPIONS.forEach(champ => {
+      champ.roles.forEach(role => {
+        entries.push({ champ, role, tier: getRoleTier(champ, role) })
+      })
+    })
+    return entries
+  }
+  return CHAMPIONS
+    .filter(c => c.roles.includes(activeRole))
+    .map(champ => ({ champ, role: activeRole, tier: getRoleTier(champ, activeRole) }))
+}
+
+/** Groups entries by tier preserving GOD→S→A→B→C order */
+const groupByTier = (entries) => {
+  const grouped = { GOD: [], S: [], A: [], B: [], C: [] }
+  entries.forEach(e => { if (grouped[e.tier]) grouped[e.tier].push(e) })
+  return grouped
+}
+
+// ─── Champion card ────────────────────────────────────────────────────────────
+
+function ChampCard({ champ, role, tier, onNavigate, onRoleClick }) {
+  const { color: roleColor, icon: roleIcon } = ROLE_META[role]
+  const tierColor = TIER_CONFIG[tier]?.color || '#7a8fa6'
+  const [hovered, setHovered] = React.useState(false)
+
+  return (
+    <div style={{
+      display: 'flex', flexDirection: 'column',
+      alignItems: 'center', gap: '5px',
+      width: '64px',
+    }}>
+      {/* Portrait */}
+      <div
+        onClick={() => onNavigate(champ)}
+        onMouseEnter={() => setHovered(true)}
+        onMouseLeave={() => setHovered(false)}
+        style={{
+          width: '56px', height: '56px',
+          borderRadius: '10px',
+          border: `2px solid ${hovered ? roleColor : tier === 'GOD' ? '#ff6b3555' : '#2a3548'}`,
+          overflow: 'hidden',
+          background: '#232d3f',
+          cursor: 'pointer',
+          transition: 'border-color .15s, transform .15s, box-shadow .15s',
+          transform: hovered ? 'translateY(-3px)' : 'translateY(0)',
+          boxShadow: hovered ? `0 6px 16px ${roleColor}44` : 'none',
+          position: 'relative',
+        }}
+      >
+        <img
+          src={champ.img}
+          alt={champ.name}
+          style={{ width: '100%', height: '100%', objectFit: 'cover' }}
+          onError={e => { e.target.style.display = 'none' }}
+        />
+        {/* Tier badge on portrait */}
+        <div style={{
+          position: 'absolute', bottom: '2px', right: '2px',
+          background: '#0d1117cc',
+          borderRadius: '3px',
+          padding: '1px 4px',
+          fontSize: '8px', fontWeight: 800,
+          color: tierColor,
+          lineHeight: 1.4,
+        }}>
+          {tier}
+        </div>
+      </div>
+
+      {/* Name */}
+      <span style={{
+        fontSize: '9px', color: '#94a3b8',
+        textAlign: 'center', width: '64px',
+        overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap',
+      }}>
+        {champ.name}
+      </span>
+
+      {/* Role badge — filters the list on click */}
+      <button
+        onClick={() => onRoleClick(role)}
+        style={{
+          background: `${roleColor}20`,
+          border: `1px solid ${roleColor}50`,
+          borderRadius: '4px',
+          color: roleColor,
+          fontSize: '8px', fontWeight: 700,
+          padding: '2px 6px',
+          cursor: 'pointer',
+          textTransform: 'uppercase',
+          letterSpacing: '0.3px',
+          transition: 'background .15s, border-color .15s',
+          whiteSpace: 'nowrap',
+        }}
+        onMouseEnter={e => {
+          e.currentTarget.style.background = `${roleColor}40`
+          e.currentTarget.style.borderColor = roleColor
+        }}
+        onMouseLeave={e => {
+          e.currentTarget.style.background = `${roleColor}20`
+          e.currentTarget.style.borderColor = `${roleColor}50`
+        }}
+      >
+        {roleIcon} {role}
+      </button>
+    </div>
+  )
+}
+
+// ─── Tier row ─────────────────────────────────────────────────────────────────
+
+function TierRow({ tier, entries, onNavigate, onRoleClick }) {
+  const cfg = TIER_CONFIG[tier]
+  return (
+    <div style={{
+      display: 'flex',
+      background: '#161b22',
+      border: `1px solid ${tier === 'GOD' ? '#ff6b3544' : '#2a3548'}`,
+      borderRadius: '12px',
+      overflow: 'hidden',
+      marginBottom: '12px',
+      boxShadow: cfg.glow,
+    }}>
+      {/* Tier label */}
+      <div style={{
+        width: '68px', flexShrink: 0,
+        background: cfg.bg,
+        borderRight: `1px solid ${cfg.color}30`,
+        display: 'flex', flexDirection: 'column',
+        alignItems: 'center', justifyContent: 'center',
+        gap: '4px', padding: '14px 4px',
+      }}>
+        {tier === 'GOD' ? (
+          <>
+            <span style={{ fontSize: '20px' }}>👑</span>
+            <span style={{
+              fontSize: '11px', fontWeight: 800,
+              color: cfg.color, letterSpacing: '1px',
+              textShadow: '0 0 14px #ff6b35',
+            }}>GOD</span>
+          </>
+        ) : (
+          <span style={{ fontSize: '30px', fontWeight: 800, color: cfg.color }}>
+            {tier}
+          </span>
+        )}
+        {/* Count pill */}
+        <span style={{
+          fontSize: '9px', fontWeight: 700,
+          color: `${cfg.color}90`,
+          background: `${cfg.color}18`,
+          borderRadius: '8px', padding: '1px 6px',
+        }}>
+          {entries.length}
+        </span>
+      </div>
+
+      {/* Cards */}
+      <div style={{
+        display: 'flex', flexWrap: 'wrap',
+        gap: '10px', padding: '12px 14px',
+        alignItems: 'flex-start', flex: 1,
+      }}>
+        {entries.map(({ champ, role }, i) => (
+          <ChampCard
+            key={`${champ.id}-${role}-${i}`}
+            champ={champ}
+            role={role}
+            tier={tier}
+            onNavigate={onNavigate}
+            onRoleClick={onRoleClick}
+          />
+        ))}
+      </div>
+    </div>
+  )
+}
+
+// ─── Main component ───────────────────────────────────────────────────────────
 
 export default function TierList({ navigate }) {
   const [activeRole, setActiveRole] = React.useState('All')
-  const roles = ['All', 'Baron', 'Jungle', 'Mid', 'Duo', 'Support']
-  const ROLE_COLOR = {
-    Baron: '#8b5cf6',
-    Jungle: '#22c55e',
-    Mid: '#3b82f6',
-    Duo: '#f97316',
-    Support: '#ec4899',
-  }
 
-  const getTier = (champ, role) => {
-    if (role === 'All') return champ.tier
-    return ROLE_TIERS[`${champ.id}-${role}`] || champ.tier
-  }
-
-  const getFilteredTiers = () => {
-    if (activeRole === 'All') return TIERS
-
-    const tierMap = { GOD: [], S: [], A: [], B: [], C: [] }
-
-    CHAMPIONS
-      .filter(c => c.roles.includes(activeRole))
-      .forEach(c => {
-        const t = getTier(c, activeRole)
-        if (tierMap[t]) tierMap[t].push(c.id)
-      })
-
-    return {
-      GOD: { color: '#ff6b35', champs: tierMap.GOD },
-      S: { color: '#22c55e', champs: tierMap.S },
-      A: { color: '#3b82f6', champs: tierMap.A },
-      B: { color: '#f97316', champs: tierMap.B },
-      C: { color: '#ef4444', champs: tierMap.C },
-    }
-  }
-
-  const displayTiers = getFilteredTiers()
+  const entries = buildEntries(activeRole)
+  const grouped = groupByTier(entries)
+  const totalChamps = entries.length
 
   return (
-    <div style={{ maxWidth: '900px', margin: '0 auto' }}>
+    <div style={{ maxWidth: '960px', margin: '0 auto' }}>
 
       {/* Hero */}
       <div style={{
@@ -63,7 +237,7 @@ export default function TierList({ navigate }) {
           textTransform: 'uppercase', letterSpacing: '3px',
           color: '#c89b3c', marginBottom: '12px',
         }}>
-          Wild Rift · Patch 7.1d
+          Wild Rift · Patch 7.1e
         </div>
         <h1 style={{
           fontSize: '32px', fontWeight: 700, color: '#fff',
@@ -71,145 +245,114 @@ export default function TierList({ navigate }) {
         }}>
           Champion Tier List
         </h1>
-        <p style={{ color: '#7a8fa6', fontSize: '14px' }}>
-          Click any champion to view their full guide — filter by role for role-specific rankings
+        <p style={{ color: '#7a8fa6', fontSize: '13px' }}>
+          Multi-role champions are ranked <strong style={{ color: '#c89b3c' }}>independently per role</strong> — click any role badge to filter
         </p>
       </div>
 
       {/* Role filters */}
       <div style={{
         display: 'flex', gap: '8px',
-        marginBottom: '28px', flexWrap: 'wrap',
+        marginBottom: '20px', flexWrap: 'wrap',
         justifyContent: 'center',
       }}>
-        {roles.map(r => (
+        {ROLES.map(r => {
+          const meta = ROLE_META[r]
+          const active = activeRole === r
+          const color = meta ? meta.color : '#c89b3c'
+          return (
+            <button
+              key={r}
+              onClick={() => setActiveRole(r)}
+              style={{
+                background: active ? color : 'transparent',
+                border: `1px solid ${active ? color : '#2a3548'}`,
+                borderRadius: '20px',
+                color: active ? '#fff' : '#7a8fa6',
+                fontSize: '12px', fontWeight: 700,
+                textTransform: 'uppercase', letterSpacing: '0.5px',
+                padding: '8px 20px', cursor: 'pointer',
+                transition: 'all .15s',
+                display: 'flex', alignItems: 'center', gap: '6px',
+              }}
+              onMouseEnter={e => {
+                if (!active) e.currentTarget.style.borderColor = color
+              }}
+              onMouseLeave={e => {
+                if (!active) e.currentTarget.style.borderColor = '#2a3548'
+              }}
+            >
+              {meta && <span>{meta.icon}</span>}
+              {r}
+            </button>
+          )
+        })}
+      </div>
+
+      {/* Stats bar */}
+      <div style={{
+        display: 'flex', justifyContent: 'space-between',
+        alignItems: 'center',
+        marginBottom: '20px',
+        padding: '10px 16px',
+        background: '#161b22',
+        borderRadius: '8px',
+        border: '1px solid #2a3548',
+        fontSize: '12px',
+      }}>
+        <span style={{ color: '#7a8fa6' }}>
+          Showing <strong style={{ color: '#e2e8f0' }}>{totalChamps}</strong> entries
+          {activeRole !== 'All' && (
+            <span style={{ color: ROLE_META[activeRole]?.color }}>
+              {' '}· {ROLE_META[activeRole]?.icon} {activeRole}
+            </span>
+          )}
+        </span>
+        {activeRole !== 'All' && (
           <button
-            key={r}
-            onClick={() => setActiveRole(r)}
+            onClick={() => setActiveRole('All')}
             style={{
-              background: activeRole === r ? (ROLE_COLOR[r] || '#c89b3c') : 'transparent',
-              border: `1px solid ${activeRole === r ? (ROLE_COLOR[r] || '#c89b3c') : '#2a3548'}`,
-              borderRadius: '20px',
-              color: activeRole === r ? '#fff' : '#7a8fa6',
-              fontSize: '12px', fontWeight: 700,
-              textTransform: 'uppercase', letterSpacing: '0.5px',
-              padding: '8px 18px', cursor: 'pointer', transition: 'all .15s',
+              background: 'transparent', border: '1px solid #2a3548',
+              borderRadius: '12px', color: '#7a8fa6',
+              fontSize: '11px', padding: '4px 12px',
+              cursor: 'pointer',
             }}
           >
-            {r}
+            ✕ Clear filter
           </button>
-        ))}
+        )}
+        {activeRole === 'All' && (
+          <span style={{ color: '#4a5568', fontSize: '11px' }}>
+            Each champion counted once per role
+          </span>
+        )}
       </div>
 
       {/* Tier rows */}
-      {Object.entries(displayTiers).map(([tier, data]) => {
-        if (!data.champs.length) return null
-        const champs = data.champs
-          .map(id => CHAMPIONS.find(c => c.id === id))
-          .filter(Boolean)
-        if (!champs.length) return null
-
+      {Object.entries(grouped).map(([tier, tierEntries]) => {
+        if (!tierEntries.length) return null
         return (
-          <div key={tier} style={{
-            display: 'flex',
-            background: '#161b22',
-            border: `1px solid ${tier === 'GOD' ? '#ff6b3566' : '#2a3548'}`,
-            borderRadius: '12px',
-            overflow: 'hidden',
-            marginBottom: '16px',
-            boxShadow: tier === 'GOD' ? '0 0 20px #ff6b3522' : 'none',
-          }}>
-            {/* Tier label */}
-            <div style={{
-              width: '72px',
-              flexShrink: 0,
-              background: tier === 'GOD'
-                ? 'linear-gradient(135deg, #ff6b3530, #ffd70020)'
-                : `${data.color}18`,
-              borderRight: `1px solid ${data.color}44`,
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              fontSize: tier === 'GOD' ? '12px' : '26px',
-              fontWeight: 700,
-              color: data.color,
-              letterSpacing: tier === 'GOD' ? '1px' : '0',
-              textShadow: tier === 'GOD' ? '0 0 12px #ff6b35' : 'none',
-              padding: '16px 4px',
-              textAlign: 'center',
-              flexDirection: 'column',
-              gap: '2px',
-            }}>
-              {tier === 'GOD' ? (
-                <>
-                  <span style={{ fontSize: '20px' }}>👑</span>
-                  <span>GOD</span>
-                </>
-              ) : tier}
-            </div>
-
-            {/* Champions */}
-            <div style={{
-              display: 'flex',
-              flexWrap: 'wrap',
-              gap: '10px',
-              padding: '14px',
-              alignItems: 'center',
-              flex: 1,
-            }}>
-              {champs.map(c => (
-                <div
-                  key={c.id}
-                  onClick={() => navigate('champion', c)}
-                  style={{
-                    display: 'flex',
-                    flexDirection: 'column',
-                    alignItems: 'center',
-                    gap: '5px',
-                    cursor: 'pointer',
-                  }}
-                >
-                  <div style={{
-                    width: '54px', height: '54px',
-                    borderRadius: '8px',
-                    border: `2px solid ${tier === 'GOD' ? '#ff6b3566' : '#2a3548'}`,
-                    overflow: 'hidden',
-                    background: '#232d3f',
-                    display: 'flex', alignItems: 'center', justifyContent: 'center',
-                    fontSize: '22px', transition: 'all .15s',
-                  }}
-                  onMouseEnter={e => e.currentTarget.style.borderColor = tier === 'GOD' ? '#ff6b35' : '#c89b3c'}
-                  onMouseLeave={e => e.currentTarget.style.borderColor = tier === 'GOD' ? '#ff6b3566' : '#2a3548'}
-                  >
-                    <img
-                      src={c.img}
-                      alt={c.name}
-                      style={{ width: '100%', height: '100%', objectFit: 'cover' }}
-                      onError={e => { e.target.style.display = 'none' }}
-                    />
-                  </div>
-                  <span style={{
-                    fontSize: '10px', color: '#7a8fa6',
-                    textAlign: 'center', width: '58px',
-                    overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap',
-                  }}>
-                    {c.name}
-                  </span>
-                  {activeRole !== 'All' && (
-                    <span style={{
-                      fontSize: '9px',
-                      fontWeight: 700,
-                      color: TIER_COLORS[getTier(c, activeRole)] || '#7a8fa6',
-                    }}>
-                      {getTier(c, activeRole)}
-                    </span>
-                  )}
-                </div>
-              ))}
-            </div>
-          </div>
+          <TierRow
+            key={tier}
+            tier={tier}
+            entries={tierEntries}
+            onNavigate={champ => navigate('champion', champ)}
+            onRoleClick={setActiveRole}
+          />
         )
       })}
+
+      {/* Footer */}
+      <div style={{
+        textAlign: 'center', padding: '24px',
+        fontSize: '11px', color: '#4a5568',
+        borderTop: '1px solid #2a3548',
+        marginTop: '8px',
+        lineHeight: 1.7,
+      }}>
+        Rankings are independent per lane · Multi-role champions appear once per role<br />
+        Click a champion portrait to view their full guide · Patch 7.1e
+      </div>
     </div>
   )
 }

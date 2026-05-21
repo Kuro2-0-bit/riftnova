@@ -23,6 +23,8 @@ const ITEMS = {
     { name: 'Edge of Night', tier: 'A', desc: 'AD, Lethality, spell shield on channel.' },
     { name: "Youmuu's Ghostblade", tier: 'A', desc: 'AD, Lethality, Move Speed on use.' },
     { name: 'Eclipse', tier: 'A', desc: 'AD, Lethality, shield on 2-hit proc.' },
+    { name: "Serpent's Fang", tier: 'A', desc: 'AD, Lethality, reduces and punishes enemy shields.' },
+    { name: "Oceanid's Trident", tier: 'A', desc: 'AD, HP Regen, empowers attacks after using an ability.' },
     { name: 'Spear of Shojin', tier: 'A', desc: 'AD, Ability Haste, reduces ability cooldowns on hit.' },
     { name: 'Terminus', tier: 'A', desc: 'AD, AS, alternates armor and MR shred.' },
     { name: 'Infinity Edge', tier: 'A', desc: 'Massive AD and crit damage amplifier.' },
@@ -55,7 +57,6 @@ const ITEMS = {
     { name: 'Psychic Projector', tier: 'A', desc: 'AP, bonus magic damage stored and released.' },
     { name: 'Archangel\'s Staff', tier: 'B', desc: 'AP, Mana, converts mana to bonus AP.' },
     { name: 'Malignance', tier: 'B', desc: 'AP, Ability Haste, burns on ultimate hit.' },
-    { name: 'Bandle Fantasy', tier: 'B', desc: 'AP, Mana, bonus damage on ability hit.' },
     { name: 'Horizon Focus', tier: 'B', desc: 'AP, bonus damage to slowed or stunned targets.' },
     { name: 'Cosmic Drive', tier: 'B', desc: 'AP, Ability Haste, Move Speed in combat.' },
     { name: 'Rylai\'s Crystal Scepter', tier: 'B', desc: 'AP, HP, slows enemies on ability hit.' },
@@ -101,7 +102,6 @@ const ITEMS = {
     { name: 'Locket of the Iron Solari', tier: 'A', desc: 'HP, Armor, MR, shields nearby allies on use.' },
     { name: 'Psychic Projector', tier: 'A', desc: 'AP, bonus magic damage stored and released.' },
     { name: 'Moonstone Renewer', tier: 'B', desc: 'AP, Ability Haste, heals nearby allies in combat.' },
-    { name: 'Dream Maker', tier: 'B', desc: 'HP, Ability Haste, shields ally based on damage taken.' },
     { name: 'Yordle Trap', tier: 'B', desc: 'AP, places traps that slow and damage enemies.' },
     { name: 'Imperial Mandate', tier: 'C', desc: 'AP, HP, bonus damage on slowed targets.' },
     { name: 'Soul Transfer', tier: 'C', desc: 'HP, revives nearby ally on death once.' },
@@ -118,13 +118,13 @@ const ITEMS = {
   ],
 
   'Enchants': [
-    { name: 'Stasis', tier: 'S', desc: 'Become invulnerable for 2.5 seconds.' },
-    { name: 'Quicksilver', tier: 'S', desc: 'Remove all CC effects instantly.' },
-    { name: 'Veil', tier: 'S', desc: 'Grants a spell shield that blocks one ability.' },
-    { name: 'Protobelt', tier: 'A', desc: 'Dash forward and deal AoE damage.' },
-    { name: 'Glorious Teleport', tier: 'A', desc: 'Teleport to any allied structure.' },
-    { name: 'Magnetic Blaster', tier: 'A', desc: 'Fires a blast at nearby enemies.' },
-    { name: 'Gargoyle Stoneplate', tier: 'A', desc: 'HP, Armor, MR, massively grows HP on use.' },
+    { name: 'Stasis', tier: 'S', desc: 'Boots enchant — become invulnerable for 2.5 seconds.' },
+    { name: 'Quicksilver', tier: 'S', desc: 'Boots enchant — remove all CC effects instantly.' },
+    { name: 'Veil', tier: 'S', desc: 'Boots enchant — grants a spell shield that blocks one ability.' },
+    { name: 'Protobelt', tier: 'A', desc: 'Boots enchant — dash forward and deal AoE damage.' },
+    { name: 'Glorious', tier: 'A', desc: 'Boots enchant — teleport to any allied structure.' },
+    { name: 'Magnetic Blaster', tier: 'A', desc: 'Boots enchant — fires a blast at nearby enemies.' },
+    { name: 'Gargoyle', tier: 'A', desc: 'Boots enchant — massively increases HP and grants resistances on use.' },
     { name: 'Bandle Fantasy', tier: 'B', desc: 'AP, Mana, bonus damage on ability hit.' },
     { name: 'Dream Maker', tier: 'B', desc: 'HP, Ability Haste, shields ally based on damage taken.' },
   ],
@@ -172,7 +172,7 @@ export default function ItemList() {
           Item Tier List
         </h1>
         <p style={{ color: '#7a8fa6', fontSize: '14px' }}>
-          All Wild Rift items organized by category — with tier ratings
+          All Wild Rift items organized by category — updated for Patch 7.1e
         </p>
       </div>
 

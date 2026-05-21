@@ -6,7 +6,7 @@ export const CHAMPION_EXTRAS = {
       Q:{name:'The Darkin Blade',desc:'Slams his greatsword three times. The third slam knocks enemies into the air.'},
       W:{name:'Infernal Chains',desc:'Slams the ground sending a chain that slows and drags enemies to the center.'},
       E:{name:'Umbral Dash',desc:'Passively heals when dealing damage. Actively dashes in a direction during Q.'},
-      R:{name:'World Ender',desc:'Transforms unleashing his true form. Gains movement speed and increased healing. Can revive on death.'},
+      R:{name:'World Ender',desc:'Transforms unleashing his true form. Gains movement speed and increased healing.'},
     }
   },
   'ahri': {

@@ -40,6 +40,7 @@ export const ITEM_IMAGES = {
   "Berserker's Greaves": `${WRF}/items/berserkers-greaves.png`,
   "Ionian Boots of Lucidity": `${WRF}/items/ionian-boots-of-lucidity.png`,
   "Gargoyle Stoneplate": `${WRF}/items/gargoyle.png`,
+  "Gargoyle": `${WRF}/items/gargoyle.png`,
   "Warmog's Armor": `${WRF}/items/warmogs-armor.png`,
   "Infinity Edge": `${WRF}/items/infinity-edge.png`,
   "Mantle of the Twelfth Hour": `${WRF}/items/mantle-of-the-twelfth-hour.png`,
@@ -100,6 +101,7 @@ export const ITEM_IMAGES = {
   "Manamune": `${WRF}/items/manamune.png`,
   "Titanic Hydra": `${WRF}/items/titanic-hydra.png`,
   "Glorious Teleport": `${WRF}/items/glorious.png`,
+  "Glorious": `${WRF}/items/glorious.png`,
 
   // C Tier
   "Mejai's Soulstealer": `${WRF}/items/mejais-soulstealer.png`,
@@ -113,20 +115,20 @@ export const ITEM_IMAGES = {
 
   // Others referenced in builds
   "Shadowflame": `${WRF}/items/shadowflame.png`,
-  "Void Staff": `${WRF}/items/void-staff.png`,
-  "Cryptbloom": `${WRF}/items/cryptbloom.png`,
-  "Hextech Rocketbelt": `${WRF}/items/hextech-rocketbelt.png`,
-  "Zhonya's Hourglass": `${WRF}/items/zhonyas-hourglass.png`,
-  "Immortal Shieldbow": `${WRF}/items/immortal-shieldbow.png`,
-  "Axiom Arc": `${WRF}/items/axiom-arc.png`,
-  "Ravenous Hydra": `${WRF}/items/ravenous-hydra.png`,
+  "Malignance": `${WRF}/items/malignance.png`,
+  "Oceanid's Trident": `${WRF}/items/oceanids-trident.png`,
+  "Riftmaker": `${WRF}/items/riftmaker.png`,
+  "Crown of the Shattered Queen": `${WRF}/items/crown-of-the-shattered-queen.png`,
+  "Bloodthirster": `${WRF}/items/bloodthirster.png`,
+  "Edge of Night": `${WRF}/items/edge-of-night.png`,
+  "Titanic Hydra": `${WRF}/items/titanic-hydra.png`,
   "Moonstone Renewer": `${WRF}/items/moonstone-renewer.png`,
   "Shard of True Ice": `${WRF}/items/shard-of-true-ice.png`,
-  "Chemtech Putrifier": `${WRF}/items/chemtech-putrifier.png`,
-  "Stormrazor": `${WRF}/items/stormrazor.png`,
-  "Rapid Firecannon": `${WRF}/items/rapid-firecannon.png`,
-  "Boots of Swiftness": `${WRF}/items/boots-of-swiftness.png`,
-  "Sorcerer's Shoes": `${WRF}/items/sorcerers-shoes.png`,
+  "Morellonomicon": `${WRF}/items/morellonomicon.png`,
+  "Essence Reaver": `${WRF}/items/essence-reaver.png`,
+  "Phantom Dancer": `${WRF}/items/phantom-dancer.png`,
+  "Boots of Dynamism": `${WRF}/items/boots-of-dynamism.png`,
+  "Boots of Mana": `${WRF}/items/boots-of-mana.png`,
   "Nashor's Tooth": `${WRF}/items/nashors-tooth.png`,
 }
 
@@ -150,7 +152,7 @@ export const RUNE_IMAGES = {
   "Overgrowth": `${WRF}/runes/overgrowth.png`,
   "Font of Life": `${WRF}/runes/font-of-life.png`,
   "Sudden Impact": `${WRF}/runes/sudden-impact.png`,
-  "Eyeball Collection": `${WRF}/runes/eyeball-collection.png`,
+  "Eyeball Collection": `${WRF}/runes/eyeball-collector.png`,
   "Relentless Hunter": `${WRF}/runes/relentless-hunter.png`,
   "Gathering Storm": `${WRF}/runes/gathering-storm.png`,
   "Transcendence": `${WRF}/runes/transcendence.png`,
@@ -159,6 +161,7 @@ export const RUNE_IMAGES = {
   "Demolish": `${WRF}/runes/demolish.png`,
   "Hunter-Genius": `${WRF}/runes/hunter-genius.png`,
   "Sweet Tooth": `${WRF}/runes/sweet-tooth.png`,
+  "Dark Harvest": `${WRF}/runes/dark-harvest.png`,
 }
 
 export const SPELL_IMAGES = {
